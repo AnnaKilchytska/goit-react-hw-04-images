@@ -3,19 +3,19 @@ import { useEffect } from 'react';
 
 function Modal({ image, onClose }) {
   useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.code === 'Escape') {
+        console.log('escape pressed');
+        onClose();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  });
-
-  const handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      console.log('escape pressed');
-      onClose();
-    }
-  };
+  }, [onClose]);
 
   const handleBackdropClick = e => {
     if (e.currentTarget === e.target) {

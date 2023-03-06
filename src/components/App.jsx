@@ -13,28 +13,23 @@ function App() {
   const [showBtn, setShowBtn] = useState(false);
 
   useEffect(() => {
+    if (request === '') {
+      return;
+    }
     async function makeRequest() {
       try {
-        if (request === '') {
-          return;
-        }
         setStatus('pending');
 
-        const result = await requestImages(request, page);
-
-        const { data: allData } = result;
+        const { data: allData } = await requestImages(request, page);
         const { hits: newImages } = allData;
 
         if (newImages.length === 0) {
           setStatus('error');
           return;
-        } else {
-          setImages(i => {
-            return page === 1 ? newImages : [...i, ...newImages];
-          });
-          setStatus('success');
-          setShowBtn(page < Math.ceil(allData.totalHits / 12));
         }
+        setImages(i => [...i, ...newImages]);
+        setStatus('success');
+        setShowBtn(page < Math.ceil(allData.totalHits / 12));
       } catch (error) {
         setStatus('error');
       }
@@ -52,7 +47,7 @@ function App() {
   };
 
   const handleButtonClick = () => {
-    return setPage((page += 1));
+    return setPage(page => page + 1);
   };
 
   return (
